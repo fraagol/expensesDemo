@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Expenses Demo</title>
+<script type="text/javascript" src="/js/libs/angular-1.5.9.js"></script>
+<script type="text/javascript" src="/js/libs/ui-bootstrap-2.5.0.js"></script>
+<link rel="stylesheet"; href="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.css">
+<script src="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.js"></script>
+<script type="text/javascript" src="/js/app.module.js"></script>
+<script type="text/javascript" src="/js/expenses.controller.js"></script>
+<script type="text/javascript" src="/js/expenses.service.js"></script>
+<link rel="stylesheet" href="/css/bootstrap.css">
+
+</head>
+<body ng-app="expensesApp">
+	<h1>Titulo</h1>
+	<div ng-controller="ExpensesController as vm">
+	{{vm.text}}
+	{{vm.list}}
+	</div>
+
+<div class="container">
+
+      <div class="starter-template">
+        <h1>Bootstrap starter template</h1>
+        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+      </div>
+
+<table ng-table="vm.tableParams" class="table" show-filter="true">
+    <tr ng-repeat="expense in vm.tableParams.data">
+        <td title="'Description'"  sortable="'description'">
+            {{expense.description}}</td>
+        <td title="'Value'" sortable="'value'">
+            {{expense.value}}</td>
+    </tr>
+</table>
+
+{{vm.tableParams}}
+    </div>
+
+
+</body>
+</html>
