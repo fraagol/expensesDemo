@@ -29,8 +29,8 @@
 	<p>
 	<div uib-alert ng-if="vm.showAlert" ng-class="vm.alertType" close="vm.closeAlert()" dismiss-on-timeout="3000" >{{vm.msg}}</div>
 	</p>
-	{{vm.alertTime}}
-	<table ng-table="vm.tableParams" class="table table-bordered table-striped table-condensed" show-filter="true">
+
+	<table ng-show="vm.tableParams.data.length>0" ng-table="vm.tableParams" class="table table-bordered table-striped table-condensed" show-filter="true">
     <tr ng-repeat="expense in vm.tableParams.data">
         <td title="'Description'"  sortable="'description'">
             {{expense.description}}</td>
@@ -67,7 +67,6 @@
             <button type="button" class="btn btn-default" ng-click="$ctrl.openDp()"><i class="glyphicon glyphicon-calendar"></i></button>
           </span>
         </p>
-
             
         </div>
         <div class="modal-footer">
