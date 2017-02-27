@@ -4,7 +4,9 @@
 		
 		return {
 			getExpenses: getExpenses,
-			createExpense: createExpense
+			createExpense: createExpense,
+			updateExpense:updateExpense,
+			deleteExpense:deleteExpense
 		};
 		
 		function getExpenses(){
@@ -15,9 +17,33 @@
 			
 		}
 		
-		function createExpense(){
-			$http.post("/expense",{value:6.6, date: "2015-10-11", description:"tren"});
-		}
+		function createExpense(expense){
+			return $http.post("/expense",
+					{value:expense.value, 
+					 date: expense.date, 
+					 description:expense.description})
+					 .then(function(response){
+						 console.log(response);
+						 return response.data;
+					 });
+					}
 		
+		function updateExpense(id,expense){
+			return $http.put("/expense/"+id,
+					{value:expense.value, 
+					 date: expense.date, 
+					 description:expense.description})
+					 .then(function(response){
+						 console.log(response);
+						 return response.data;
+					 });
+					}
+		function deleteExpense(id){
+			return $http.delete("/expense/"+id)
+					 .then(function(response){
+						 console.log(response);
+						 return response.data;
+					 });
+					}		
 	});
 })();

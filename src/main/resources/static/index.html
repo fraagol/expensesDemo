@@ -4,41 +4,83 @@
 <meta charset="UTF-8">
 <title>Expenses Demo</title>
 <script type="text/javascript" src="/js/libs/angular-1.5.9.js"></script>
-<script type="text/javascript" src="/js/libs/ui-bootstrap-2.5.0.js"></script>
+<script type="text/javascript" src="/js/libs/ui-bootstrap-tpls-2.5.0.js"></script>
 <link rel="stylesheet"; href="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.css">
 <script src="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.js"></script>
 <script type="text/javascript" src="/js/app.module.js"></script>
 <script type="text/javascript" src="/js/expenses.controller.js"></script>
+<script type="text/javascript" src="/js/modal.controller.js"></script>
 <script type="text/javascript" src="/js/expenses.service.js"></script>
 <link rel="stylesheet" href="/css/bootstrap.css">
 
 </head>
 <body ng-app="expensesApp">
-	<h1>Titulo</h1>
 	<div ng-controller="ExpensesController as vm">
-	{{vm.text}}
-	{{vm.list}}
-	</div>
 
-<div class="container">
+	<div class="container">
 
       <div class="starter-template">
-        <h1>Bootstrap starter template</h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+        <h1>Expenses Manager</h1>
+        
       </div>
-
-<table ng-table="vm.tableParams" class="table" show-filter="true">
+	<p>
+    <button type="button" class="btn btn-primary" ng-click="vm.openAddModal()">Add new expense</button>
+	</p>
+	<p>
+	<div uib-alert ng-if="vm.showAlert" ng-class="vm.alertType" close="vm.closeAlert()" dismiss-on-timeout="3000" >{{vm.msg}}</div>
+	</p>
+	{{vm.alertTime}}
+	<table ng-table="vm.tableParams" class="table table-bordered table-striped table-condensed" show-filter="true">
     <tr ng-repeat="expense in vm.tableParams.data">
         <td title="'Description'"  sortable="'description'">
             {{expense.description}}</td>
         <td title="'Value'" sortable="'value'">
             {{expense.value}}</td>
+            
+		<td title="'Date'" sortable="'date'">
+            {{expense.date}}</td>
+        <td title="'Actions'">
+        <button type="button" class="btn btn-primary" ng-click="vm.editElement(expense)">Edit</button>
+        <button type="button" class="btn btn-danger" ng-click="vm.deleteElement(expense.id)">Delete</button>
+        </td>    
     </tr>
 </table>
 
-{{vm.tableParams}}
+    <script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modal-title">Expense</h3>
+        </div>
+        <div class="modal-body" id="modal-body">
+ 			<p class="form-group">
+    			<label>Description</label>
+    			<input type="text" ng-model="$ctrl.expense.description" class="form-control">
+  			</p>
+ 			<p class="form-group">
+    			<label>Value</label>
+    			<input type="text" ng-model="$ctrl.expense.value" class="form-control">
+  			</p>
+			<label>Date</label>			
+			<p class="input-group">
+		  
+          <input type="text" class="form-control" uib-datepicker-popup="{{$ctrl.format}}" ng-click="$ctrl.openDp()" ng-model="$ctrl.expense.date" is-open="$ctrl.popup.opened" datepicker-options="$ctrl.dateOptions" ng-required="true" close-text="Close"  />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="$ctrl.openDp()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </p>
+
+            
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button>
+        </div>
+    </script>
+     <script type="text/ng-template" id="alert.html">
+    <div ng-transclude></div>
+  	</script>
+    
     </div>
 
-
+</div>
 </body>
 </html>

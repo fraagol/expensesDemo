@@ -1,4 +1,4 @@
-package com.aguila.repository;
+package com.aguila.model;
 
 
 import java.util.Date;
