@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 	angular.module('expensesApp').controller('ExpensesController',
-			function(ExpensesService, NgTableParams, $uibModal) {
+			function(ExpensesService, $uibModal) {
 
 				var vm = this;
 				vm.openAddModal = openAddModal;
@@ -15,13 +15,12 @@
 				vm.editingElement=null;
 				vm.editElement=editElement;
 				vm.deleteElement=deleteElement;
-				vm.tableParams = new NgTableParams({}, {
-					getData : function(params) {
-						console.log("calling getData");
-						return ExpensesService.getExpenses();
-					}
-				});
+				vm.list=[];
 
+				ExpensesService.getExpenses().then(function(list){
+					console.log(list);
+						vm.list=list;
+			});
 				
 				function closeAlert(){
 					vm.showAlert=false;
@@ -45,7 +44,7 @@
 				
 				function deleteElement(id){
 					ExpensesService.deleteExpense(id).then(function(){
-						vm.tableParams.data=vm.tableParams.data.filter(function(element){
+						vm.list=vm.list.filter(function(element){
 							return element.id!==id;
 						});
 						vm.openAlert("Expense deleted successfully.");
@@ -69,9 +68,9 @@
 						console.log(result);
 						ExpensesService.createExpense(result).then(function (createdObject){
 							console.log("object created", createdObject);
-							vm.tableParams.data.push(createdObject);
+							vm.list.push(createdObject);
 							vm.openAlert("Expense created successfully.")
-						});
+						},handleException);
 					});
 				}
 				
@@ -99,6 +98,7 @@
 				}
 				
 				function handleException(ex){
+					console.log("ex:",ex);
 					vm.openAlert(ex.data.message, "alert-danger",0);
 					console.log(ex.data.message);
 				}
