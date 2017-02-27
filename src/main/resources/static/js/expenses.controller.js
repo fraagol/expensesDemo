@@ -1,5 +1,8 @@
 (function() {
 	'use strict';
+/**
+ * Main Controller of the Expenses Application
+ */
 	angular.module('expensesApp').controller('ExpensesController',
 			function(ExpensesService, $uibModal) {
 
@@ -12,13 +15,16 @@
 				vm.alertTime=0;
 				vm.alertType=null;
 				vm.msg="";
+				vm.addRandomExpense=addRandomExpense;
 				vm.editingElement=null;
 				vm.editElement=editElement;
 				vm.deleteElement=deleteElement;
 				vm.list=[];
+				vm.i=1;
+				vm.today=new Date();
 
+				//Call the server for expenses data
 				ExpensesService.getExpenses().then(function(list){
-					console.log(list);
 						vm.list=list;
 			});
 				
@@ -27,21 +33,36 @@
 					vm.msg='';
 				}
 				
+				/**
+				 * Open a message alert 
+				 */
 				function openAlert(msg,type,time){
-					
 					vm.alertType=angular.isUndefined(type)?"alert-success":type;
 					vm.alertTime=angular.isUndefined(time)?3000:1000;
 					vm.msg=msg;
 					vm.showAlert=true;
 				}
 				
+				
 				function editElement(item){
-					console.log("element selected for edition:",item);
 					vm.editingElement=item;
 					vm.openEditModal();
+				}
+				
+				/**
+				 * Add a random expense for debugging pourpose 
+				 */
+				function addRandomExpense(){
+					ExpensesService.createExpense({description:"Expense "+vm.i, value:vm.i++, date:vm.today}).then(function (createdObject){
+						vm.list.push(createdObject);
+						vm.openAlert("Expense created successfully.")
+					},handleException);
 					
 				}
 				
+				/**
+				 * Call the server for deleting an expense. On success, remove it from the list 
+				 */
 				function deleteElement(id){
 					ExpensesService.deleteExpense(id).then(function(){
 						vm.list=vm.list.filter(function(element){
@@ -52,8 +73,6 @@
 				}
 				
 				function openAddModal() {
-					console.log("calling openAddModal");
-					
 					var modalInstance = $uibModal.open({
 						controller: 'ModalController',
 					    controllerAs: '$ctrl',
@@ -64,10 +83,9 @@
 					        }}
 					});
 					
+					//Call the server for creation, on success, add it to the list
 					modalInstance.result.then(function(result){
-						console.log(result);
 						ExpensesService.createExpense(result).then(function (createdObject){
-							console.log("object created", createdObject);
 							vm.list.push(createdObject);
 							vm.openAlert("Expense created successfully.")
 						},handleException);
@@ -75,7 +93,7 @@
 				}
 				
 				function openEditModal() {
-					console.log("calling openAddModal");
+					
 					
 					var modalInstance = $uibModal.open({
 						controller: 'ModalController',
@@ -87,10 +105,9 @@
 					        }}
 					});
 					
+					//Call the server for updating, on success, add it to the list
 					modalInstance.result.then(function(result){
-						console.log(result);
 						ExpensesService.updateExpense(vm.editingElement.id,result).then(function (updatedObject){
-							console.log("object updated", updatedObject);
 							angular.extend(vm.editingElement,updatedObject);
 							vm.openAlert("Expense updated successfully.")
 						},handleException);
@@ -100,7 +117,6 @@
 				function handleException(ex){
 					console.log("ex:",ex);
 					vm.openAlert(ex.data.message, "alert-danger",0);
-					console.log(ex.data.message);
 				}
 
 			});

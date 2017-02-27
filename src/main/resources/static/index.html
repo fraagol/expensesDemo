@@ -20,15 +20,26 @@
 
       <div class="starter-template">
         <h1>Expenses Manager</h1>
-        <p>Welcome to the Expenses Manager Application</p>
+        <p>Welcome to the Expenses Manager Application. </p>
+        <ul>
+        <li>You can add expenses by clicking the "Add new expense" button (or "Add random expense" for auto-populated data).</li>
+        <li>You can edit and delete an expense.</li>
+        <li>A <b>value</b> bigger than 1000 will throw a MaxValueException in the service layer, handled by an <i>ExceptionHandler</i> at the <i>RestController</i> and propagated to the client with a <i>HttpStatus.INTERNAL_SERVER_ERROR code</i>. </li>
+        <li>Inserting a letter or strange character in the <i>Value</i> input will raise an exception in the controller layer.</li>
+        <li>You can access the H2 web console <a href="/h2-console" target="h2console">here</a>. The JDBC URL is: <code>jdbc:h2:mem:testdb:MODE=MySQL;DB_CLOSE_ON_EXIT=FALSE</code>
+        <li>You can access the REST API documentation via swagger <a href="/swagger-ui.html" target="swagger">here</a></li>
+        </ul>
+        
       </div>
 	<p>
     <button type="button" class="btn btn-primary" ng-click="vm.openAddModal()">Add new expense</button>
+    <button type="button" class="btn btn-primary" ng-click="vm.addRandomExpense()">Add random expense</button>
 	</p>
 	<p>
 	<div uib-alert ng-if="vm.showAlert" ng-class="vm.alertType" close="vm.closeAlert()"  >{{vm.msg}}</div>
 	</p>
 
+    <p ng-show="vm.list.length==0">There are no expenses so far</p>
 	<table ng-show="vm.list.length>0" class="table table-bordered table-striped table-condensed table-hover">
 	<tr>
 		<th class="col-md-3">Description</th>

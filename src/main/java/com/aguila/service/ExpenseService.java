@@ -8,11 +8,11 @@ public interface ExpenseService {
 
 	List<Expense> listExpenses();
 	
-	Expense getExpense(long id);
+	Expense getExpense(final long id);
 	
-	Expense createExpense( Expense expense);
+	Expense createExpense(final  Expense expense);
 
-	Expense updateExpense(long id, Expense expense);
+	Expense updateExpense(final long id, Expense expense);
 
-	void deleteExpense(long id);
+	void deleteExpense(final long id);
 }

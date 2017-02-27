@@ -19,68 +19,94 @@ import com.aguila.model.Expense;
 import com.aguila.service.ExpenseService;
 import com.aguila.util.ErrorMessage;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+/**
+ * Expenses rest controller defining the rest API
+ * 
+ * @author javi
+ *
+ */
+
 @RestController
 @RequestMapping("/expense")
+@Api(description = "Rest API for operations with Expenses", produces = "application/json")
 public class ExpensesController {
 
+	/** Service to be used */
 	@Autowired
 	ExpenseService expenseService;
 
+	/** List all expenses*/
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
+	@ApiOperation("Get a list with all Expenses")
 	List<Expense> getExpenses() {
 		return expenseService.listExpenses();
 	}
-	
-	@RequestMapping(value="/{id}" ,method = RequestMethod.GET)
+
+	/** Get a particular Expense by id*/
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
+	@ApiOperation("Get an Expense associated to the given id")
 	Expense getExpenseById(@PathVariable final long id) {
 		return expenseService.getExpense(id);
 	}
-	
-	@RequestMapping(method= RequestMethod.POST)
+
+	/**Create an expense */
+	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
-	Expense createExpense(@RequestBody Expense expense){
+	@ApiOperation("Create a new Expense")
+	Expense createExpense(@RequestBody Expense expense) {
 		expenseService.createExpense(expense);
-		System.out.println(expense);
 		return expense;
 	}
 	
-	@RequestMapping(value="/{id}",method= RequestMethod.PUT)
+	/** Update an existing Expense*/
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	Expense updateExpense(@PathVariable final long id,@RequestBody Expense expense){
+	@ApiOperation("Update an existing Expense")
+	Expense updateExpense(@PathVariable final long id, @RequestBody Expense expense) {
 		return expenseService.updateExpense(id, expense);
 	}
-	
-	@RequestMapping(value="/{id}",method= RequestMethod.DELETE)
+
+	/** Delete an existing Expense*/
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
-	void deleteExpense(@PathVariable final long id){
+	@ApiOperation("Delete an existing Expense")
+	void deleteExpense(@PathVariable final long id) {
 		expenseService.deleteExpense(id);
-		
-
 	}
-	
+
+	/** Exception handler for HttpMessageNotReadableException */
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	ErrorMessage exceptionHandler(){
-		ErrorMessage error= new ErrorMessage("Problem with the input values format");
-		System.out.println("ERRORRRRRRR");
+	ErrorMessage exceptionHandler() {
+		ErrorMessage error = new ErrorMessage("Problem with the input values format");
 		return error;
 	}
 
+	/** Exception handler for MaxValueException */
 	@ExceptionHandler(MaxValueException.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	ErrorMessage maxValueHandler(){
-		
-		ErrorMessage error= new ErrorMessage("The Value is bigger than 1000");
-		System.out.println("ERRORRRRRRR");
+	ErrorMessage maxValueHandler() {
+		ErrorMessage error = new ErrorMessage("The Value is bigger than 1000");
 		return error;
 	}
-	
-	
+
+	/** Generic Exception handler*/
+	@ExceptionHandler(Exception.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	ErrorMessage defaultHandler(Exception ex) {
+
+		ErrorMessage error = new ErrorMessage(ex.getMessage());
+		return error;
+	}
+
 }

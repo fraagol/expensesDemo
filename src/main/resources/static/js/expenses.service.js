@@ -12,7 +12,6 @@
 		function getExpenses(){
 			
 			return $http.get("/expense").then(function(data){
-				console.log(data);
 				return data.data});
 			
 		}
@@ -23,7 +22,6 @@
 					 date: expense.date, 
 					 description:expense.description})
 					 .then(function(response){
-						 console.log(response);
 						 return response.data;
 					 });
 					}
@@ -34,14 +32,12 @@
 					 date: expense.date, 
 					 description:expense.description})
 					 .then(function(response){
-						 console.log(response);
 						 return response.data;
 					 });
 					}
 		function deleteExpense(id){
 			return $http.delete("/expense/"+id)
 					 .then(function(response){
-						 console.log(response);
 						 return response.data;
 					 });
 					}		
