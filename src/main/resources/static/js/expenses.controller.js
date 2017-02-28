@@ -69,7 +69,7 @@
 							return element.id!==id;
 						});
 						vm.openAlert("Expense deleted successfully.");
-					})	
+					},handleException)	
 				}
 				
 				function openAddModal() {

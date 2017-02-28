@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
 import com.aguila.exception.MaxValueException;
@@ -64,6 +65,9 @@ public class ExpenseServiceImpl implements ExpenseService {
 	public Expense updateExpense(final long id, final Expense expense) {
 		validate(expense);
 		Expense storedExpense = expensesRepository.findOne(id);
+		if(storedExpense==null){
+			throw new DataRetrievalFailureException("The expense to be updated doesn't exist");
+		}
 		storedExpense.setDate(expense.getDate());
 		storedExpense.setDescription(expense.getDescription());
 		storedExpense.setValue(expense.getValue());
